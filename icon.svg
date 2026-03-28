@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+    <rect width="512" height="512" fill="#050505" rx="100"/>
+    <rect x="36" y="36" width="440" height="440" fill="none" stroke="#0ff" stroke-width="20" rx="80" filter="drop-shadow(0 0 20px #0ff)"/>
+    <text x="50%" y="55%" font-family="sans-serif" font-weight="900" font-size="160" fill="#fff" text-anchor="middle" dominant-baseline="middle" filter="drop-shadow(0 0 30px #f0f)">2048</text>
+</svg>
