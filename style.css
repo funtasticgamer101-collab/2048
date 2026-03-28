@@ -4,7 +4,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    user-select: none; /* Prevent text selection */
+    user-select: none;
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -18,10 +18,9 @@ body {
     height: 100vh;
     width: 100vw;
     overflow: hidden;
-    touch-action: none; /* CRITICAL: Prevents browser pull-to-refresh and swipe navigation */
+    touch-action: none; /* Prevents browser pull-to-refresh */
 }
 
-/* The Magic RGB Animation */
 @keyframes rgbCycle {
     0% { filter: hue-rotate(0deg); }
     100% { filter: hue-rotate(360deg); }
@@ -34,7 +33,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 30px;
-    /* Apply the RGB cycle to the entire game */
     animation: rgbCycle 6s linear infinite;
 }
 
@@ -108,6 +106,8 @@ h1 {
 
 .tile {
     position: absolute;
+    top: 0;  /* FIXED: Required for absolute positioning in grid */
+    left: 0; /* FIXED: Required for absolute positioning in grid */
     width: calc(25% - 7.5px);
     height: calc(25% - 7.5px);
     background: #0ff;
@@ -122,7 +122,6 @@ h1 {
     transition: transform 0.15s ease-in-out;
 }
 
-/* Tile Colors (Hue shifts will make these look amazing) */
 .tile-2 { background: #0ff; box-shadow: 0 0 15px #0ff; }
 .tile-4 { background: #0cf; box-shadow: 0 0 15px #0cf; }
 .tile-8 { background: #09f; box-shadow: 0 0 15px #09f; }
@@ -148,8 +147,8 @@ h1 {
     z-index: 10;
 }
 
-#game-over.hidden {
-    display: none;
+.hidden {
+    display: none !important;
 }
 
 #game-over h2 {
@@ -171,7 +170,30 @@ h1 {
     box-shadow: 0 0 15px #0ff, inset 0 0 10px #0ff;
     cursor: pointer;
 }
+
 #restart-btn:active {
     background: #0ff;
+    color: #000;
+}
+
+/* Install Button Styles */
+#install-btn {
+    background: rgba(0, 255, 0, 0.1);
+    color: #0f0;
+    border: 2px solid #0f0;
+    padding: 15px;
+    font-size: 1.2rem;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    border-radius: 8px;
+    box-shadow: 0 0 15px #0f0, inset 0 0 10px #0f0;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    margin-top: 10px;
+}
+
+#install-btn:active {
+    background: #0f0;
     color: #000;
 }
