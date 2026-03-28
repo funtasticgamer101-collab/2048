@@ -1,0 +1,155 @@
+:root {
+    --bg-color: #0a0a0a;
+    --board-bg: #1a1a1a;
+    --cell-bg: #2a2a2a;
+    --text-color: #ffffff;
+}
+
+* {
+    box-sizing: border-box;
+    user-select: none; /* Prevent text selection while swiping */
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    touch-action: none; /* Prevents pull-to-refresh and scrolling */
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 320px;
+    margin-bottom: 20px;
+}
+
+.rgb-text {
+    font-size: 3rem;
+    margin: 0;
+    background: linear-gradient(to right, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: rgb-bg 5s linear infinite;
+    background-size: 400% 100%;
+}
+
+@keyframes rgb-bg {
+    0% { background-position: 0 0; }
+    100% { background-position: 100% 0; }
+}
+
+.score-container {
+    background: var(--board-bg);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: 1px solid #333;
+}
+
+#installBtn {
+    background: linear-gradient(45deg, #ff00c8, #002bff);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 43, 255, 0.4);
+}
+
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    background: var(--board-bg);
+    padding: 10px;
+    border-radius: 10px;
+    position: relative;
+}
+
+/* The RGB Glowing Border */
+#game-board::before {
+    content: '';
+    position: absolute;
+    top: -4px; left: -4px; right: -4px; bottom: -4px;
+    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    z-index: -1;
+    filter: blur(12px);
+    border-radius: 14px;
+    animation: rgb-glow 10s linear infinite;
+}
+
+@keyframes rgb-glow {
+    0% { filter: blur(12px) hue-rotate(0deg); }
+    100% { filter: blur(12px) hue-rotate(360deg); }
+}
+
+.cell {
+    width: 70px;
+    height: 70px;
+    background: var(--cell-bg);
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    font-weight: bold;
+    transition: transform 0.1s ease-in-out;
+}
+
+/* Tile Colors */
+.cell[data-val="2"] { color: #eee; }
+.cell[data-val="4"] { color: #eee; background: #3a3a3a; }
+.cell[data-val="8"] { color: #fff; background: #f2b179; text-shadow: 0 0 5px #f2b179; }
+.cell[data-val="16"] { color: #fff; background: #f59563; text-shadow: 0 0 5px #f59563; }
+.cell[data-val="32"] { color: #fff; background: #f67c5f; text-shadow: 0 0 5px #f67c5f; }
+.cell[data-val="64"] { color: #fff; background: #f65e3b; text-shadow: 0 0 5px #f65e3b; }
+.cell[data-val="128"] { color: #fff; background: #edcf72; text-shadow: 0 0 8px #edcf72; font-size: 24px;}
+.cell[data-val="256"] { color: #fff; background: #edcc61; text-shadow: 0 0 8px #edcc61; font-size: 24px;}
+.cell[data-val="512"] { color: #fff; background: #edc850; text-shadow: 0 0 10px #edc850; font-size: 24px;}
+.cell[data-val="1024"] { color: #fff; background: #edc53f; text-shadow: 0 0 12px #edc53f; font-size: 20px;}
+.cell[data-val="2048"] { color: #fff; background: #edc22e; text-shadow: 0 0 15px #edc22e; font-size: 20px; box-shadow: 0 0 20px #edc22e;}
+
+#game-over {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+#game-over.hidden {
+    display: none;
+}
+
+#restartBtn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    background: #fff;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+@media (max-width: 360px) {
+    .cell { width: 60px; height: 60px; font-size: 24px; }
+    .header { width: 280px; }
+}
