@@ -3,6 +3,7 @@ let score = 0;
 const scoreElement = document.getElementById('score');
 const tileContainer = document.getElementById('tile-container');
 const gameOverScreen = document.getElementById('game-over');
+const gameBoard = document.getElementById('game-board');
 
 // Initialize Game
 function initGame() {
@@ -130,20 +131,25 @@ document.addEventListener('keydown', e => {
     }
 });
 
-// Controls: Touch Swipes
+// Controls: Touch Swipes (MOBILE FIX)
 let touchStartX = 0;
 let touchStartY = 0;
 
-document.addEventListener('touchstart', e => {
-    touchStartX = e.changedTouches[0].screenX;
-    touchStartY = e.changedTouches[0].screenY;
-}, {passive: false});
+gameBoard.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    e.preventDefault(); // Stops browser from delaying the touch
+}, { passive: false });
 
-document.addEventListener('touchend', e => {
-    let touchEndX = e.changedTouches[0].screenX;
-    let touchEndY = e.changedTouches[0].screenY;
+gameBoard.addEventListener('touchmove', e => {
+    e.preventDefault(); // CRITICAL: Stops mobile pull-to-refresh and swipe-to-go-back
+}, { passive: false });
+
+gameBoard.addEventListener('touchend', e => {
+    let touchEndX = e.changedTouches[0].clientX;
+    let touchEndY = e.changedTouches[0].clientY;
     handleSwipe(touchStartX, touchStartY, touchEndX, touchEndY);
-});
+}, { passive: false });
 
 function handleSwipe(startX, startY, endX, endY) {
     let dx = endX - startX;
@@ -162,5 +168,42 @@ function handleSwipe(startX, startY, endX, endY) {
 
 document.getElementById('restart-btn').addEventListener('click', initGame);
 
-// Start
+// --- PWA INSTALL BUTTON LOGIC ---
+let deferredPrompt;
+const installBtn = document.getElementById('install-btn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent the mini-infobar from appearing on mobile
+    e.preventDefault();
+    // Stash the event so it can be triggered later.
+    deferredPrompt = e;
+    // Update UI notify the user they can install the PWA
+    installBtn.classList.remove('hidden');
+});
+
+installBtn.addEventListener('click', async () => {
+    if (deferredPrompt) {
+        // Show the install prompt
+        deferredPrompt.prompt();
+        // Wait for the user to respond to the prompt
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+            console.log('User accepted the install prompt');
+        } else {
+            console.log('User dismissed the install prompt');
+        }
+        // We've used the prompt, and can't use it again, throw it away
+        deferredPrompt = null;
+        installBtn.classList.add('hidden');
+    }
+});
+
+window.addEventListener('appinstalled', () => {
+    // Hide the app-provided install promotion
+    installBtn.classList.add('hidden');
+    deferredPrompt = null;
+    console.log('PWA was installed');
+});
+
+// Start Game
 initGame();
